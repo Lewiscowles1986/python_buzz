@@ -48,7 +48,7 @@ cd python_buzz && python buzz.py
 
 alternatively 
 ```bash
-chmod+x buzz.py && ./buzz.py
+chmod+x buzz.py && sudo ./buzz.py
 ```
 
 Troubleshooting
