@@ -8,7 +8,8 @@ import time
 class buzz:
     def __init__ (self):
 	# ID 054c:1000 Sony Corp. Wireless Buzz! Receiver
-	self.device = usb.core.find(idVendor=0x054c, idProduct=0x1000)
+	# ID 054c:0002 Sony Corp. Standard HUB
+	self.device = usb.core.find(idVendor=0x054c, idProduct=0x0002) # Changed to reflect my SCEH-0005 Buzz&trade; For PlayStation&reg;2
 	self.interface = 0
 	self.lights = [0,0,0,0]
 	self.buttons = [{'red':0, 'yellow':0, 'green':0, 'orange':0, 'blue':0}, {'red':0, 'yellow':0, 'green':0, 'orange':0, 'blue':0}, {'red':0, 'yellow':0, 'green':0, 'orange':0, 'blue':0}, {'red':0, 'yellow':0, 'green':0, 'orange':0, 'blue':0}]
@@ -29,9 +30,10 @@ class buzz:
 
     # TODO: Should figure out how to re-attach the kernel driver
     # But this doesn't seem to work
-#    def __del__(self):
-	#print "release claimed interface"
-	#usb.util.release_interface(self.device, self.interface)
+    # Uncommented as I want this to release the interface and I don't have a kernel driver on 14.04... (strange)
+    def __del__(self):
+	print "release claimed interface"
+	usb.util.release_interface(self.device, self.interface)
 	#if self.kerneldriver == True:
 	#    print "now attaching the kernel driver again"
 	#    dev.attach_kernel_driver(self.interface)
@@ -127,12 +129,15 @@ class buzz:
 
 if __name__=='__main__':
     buzz = buzz()
-#    for x in range(16):
-#	buzz.setlights(x)
-#	time.sleep(1)
+    for x in range(16):
+	buzz.setlights(x)
+	time.sleep(1)
     buzz.setlights(1)
-    while True:
+    i = 0
+    while i < 15:
 	r = buzz.readcontroller(timeout=500)
 	if r != None:
-	    print bin(r)
-#	    print buzz.getbuttons()
+#	    print bin(r)
+	    print buzz.getbuttons()
+        i=i+1
+        time.sleep(1)
